@@ -2,7 +2,7 @@
 import axios from 'axios';
 import User from '@/interfaces/user.interface';
 
-// FIXME:
+// FIXME: Reemplazar por API real
 export default async function LoginPost(email: string, password: string) {
   // return (await axios.post<User>('/login', { email, password })).data;
 }

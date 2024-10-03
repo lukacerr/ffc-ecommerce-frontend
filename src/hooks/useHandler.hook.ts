@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useSubmitHandler(handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<unknown>) {
+export default function useHandler(handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<unknown>) {
   const [error, setError] = useState(undefined);
   const [loading, setLoading] = useState(false);
 

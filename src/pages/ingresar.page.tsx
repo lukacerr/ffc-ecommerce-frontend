@@ -4,8 +4,8 @@ import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '@/stores/user.store';
 import logoPng from '@/assets/logo.png';
-import useSubmitHandler from '@/hooks/useSubmitHandler.hook';
-import { Helmet } from 'react-helmet-async';
+import useHandler from '@/hooks/useHandler.hook';
+import ColorIconButton from '@/components/ColorIconButton';
 
 export default function IngresarPage() {
   const [email, setEmail] = useState('');
@@ -13,16 +13,14 @@ export default function IngresarPage() {
 
   const login = useUserStore((state) => state.login);
   const navigate = useNavigate();
-  const { submit, error, loading } = useSubmitHandler(() => login(email, password, navigate));
+  const { submit, error, loading } = useHandler(() => login(email, password, navigate));
 
   return (
     <Container
       component="main"
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}
     >
-      <Helmet>
-        <title>Ingresar | E-commerce</title>
-      </Helmet>
+      <ColorIconButton absolute />
       <Paper sx={{ padding: 4 }}>
         <Box display="flex" alignItems="center" flexDirection="column">
           <img src={logoPng} alt="Logo" style={{ width: 120, height: 120 }} />

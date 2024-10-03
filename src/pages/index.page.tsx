@@ -1,14 +1,10 @@
-import { Button } from '@mui/material';
-import { useUserStore } from '@/stores/user.store';
-import { useNavigate } from 'react-router';
+import Layout from '@/components/layout';
+import { NavPage } from '@/components/layout/constants';
 
 export default function IndexPage() {
-  const logout = useUserStore((state) => state.logout);
-  const token = useUserStore((state) => state.token);
-  const navigate = useNavigate();
   return (
-    <Button variant="contained" onClick={() => logout(navigate)}>
-      {import.meta.env.VITE_API_URL} {token}
-    </Button>
+    <Layout id={NavPage.DASHBOARD} header="Balances y analítica" metadata={{ title: 'Analítica' }}>
+      <span>Acá va la sección de analítica</span>
+    </Layout>
   );
 }
