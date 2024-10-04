@@ -7,7 +7,7 @@ export default function NavDrawer({ id }: React.PropsWithoutRef<{ id: NavPage }>
   const navigate = useNavigate();
 
   return (
-    <div>
+    <>
       <Toolbar sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
         <img src={logoPng} alt="Logo" style={{ width: 90, height: 90 }} />
       </Toolbar>
@@ -20,6 +20,6 @@ export default function NavDrawer({ id }: React.PropsWithoutRef<{ id: NavPage }>
           </ListItemButton>
         ))}
       </List>
-    </div>
+    </>
   );
 }

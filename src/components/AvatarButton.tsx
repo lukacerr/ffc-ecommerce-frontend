@@ -31,7 +31,7 @@ export default function AvatarButton() {
         }}
         keepMounted
       >
-        <MenuItem onClick={() => u.logout(navigate)}>Cerrar sesión</MenuItem>
+        <MenuItem onClick={() => [handleClose(), u.logout(navigate)]}>Cerrar sesión</MenuItem>
       </Menu>
     </div>
   );

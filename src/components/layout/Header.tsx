@@ -1,67 +1,36 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Drawer } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box, Slide } from '@mui/material';
 import { DRAWER_WIDTH, NAVBAR, NavPage } from './constants';
 import { Menu } from '@mui/icons-material';
-import NavDrawer from './NavDrawer';
-import { useState } from 'react';
 import SideButtons from './SideButtons';
+import { useMemo } from 'react';
 
 interface IHeaderProps {
   id: NavPage;
   header: React.ReactNode;
+  mobileOpen: boolean;
+  setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Header({ id, header }: IHeaderProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const PageIcon = NAVBAR.find((v) => v.title === id)?.icon;
+export default function Header({ id, header, mobileOpen, setMobileOpen }: IHeaderProps) {
+  const PageIcon = useMemo(() => NAVBAR.find((v) => v.title === id)?.icon, [id]);
 
   return (
-    <>
-      <AppBar color="primary" sx={{ width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` }, ml: { sm: `${DRAWER_WIDTH}px` } }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <Menu />
-          </IconButton>
-          <Box width="100%" display="flex" justifyContent="space-between" alignItems="center" overflow="auto">
+    <AppBar sx={{ width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` }, ml: { sm: `${DRAWER_WIDTH}px` } }}>
+      <Toolbar>
+        <IconButton
+          children={<Menu />}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          sx={{ mr: 2, display: { sm: 'none' } }}
+        />
+        <Box width="100%" display="flex" justifyContent="space-between" alignItems="center" overflow="auto">
+          <Slide in={true} unmountOnExit>
             <Typography variant="h6" fontWeight={900} pr={2} noWrap display="flex" alignItems="center" gap={1}>
               {PageIcon} {header}
             </Typography>
-            <SideButtons />
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Box component="nav" sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={() => setMobileOpen(!mobileOpen)}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
-          }}
-        >
-          <NavDrawer id={id} />
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
-          }}
-          open
-        >
-          <NavDrawer id={id} />
-        </Drawer>
-      </Box>
-    </>
+          </Slide>
+          <SideButtons />
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
