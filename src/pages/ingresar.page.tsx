@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextField, Typography, Paper, Container, Box, Alert, InputAdornment, IconButton, Fade } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router';
-import { useUserStore } from '@/stores/user.store';
+import { useUsuarioStore } from '@/stores/usuario.store';
 import logoPng from '@/assets/logo.png';
 import useHandler from '@/hooks/useHandler.hook';
 import ColorIconButton from '@/components/ColorIconButton';
@@ -13,7 +13,7 @@ export default function IngresarPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const login = useUserStore((state) => state.login);
+  const login = useUsuarioStore((state) => state.login);
   const navigate = useNavigate();
   const { submit, error, loading } = useHandler(() => login(email, password, navigate));
 

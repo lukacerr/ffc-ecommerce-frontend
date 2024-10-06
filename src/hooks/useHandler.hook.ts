@@ -1,15 +1,21 @@
 import { useState } from 'react';
 
-export default function useHandler(handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<unknown>) {
-  const [error, setError] = useState(undefined);
+export default function useHandler<T>(handleSubmit: (event?: React.FormEvent<HTMLFormElement>) => Promise<T>) {
+  const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const submit = async (event?: React.FormEvent<HTMLFormElement>): Promise<T | undefined> => {
+    if (event) event.preventDefault();
     setLoading(true);
-    return await handleSubmit(event)
-      .catch((e) => [setError(e), console.error(e)])
-      .finally(() => setLoading(false));
+
+    try {
+      return await handleSubmit(event);
+    } catch (e: unknown) {
+      setError(e as Error);
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return { submit, error, loading };

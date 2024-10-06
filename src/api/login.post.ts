@@ -1,12 +1,4 @@
-/*
-import axios from 'axios';
-import User from '@/interfaces/user.interface';
-
-// FIXME: Reemplazar por API real
-export default async function LoginPost(email: string, password: string) {
-  // return (await axios.post<User>('/login', { email, password })).data;
-}
-*/
-export default async function LoginPost(email: string, password: string) {
-  return { token: 'ejemplo-jwt', email, password };
+export default async function LoginPost(nombreUsuario: string, password: string) {
+  // FIXME: return (await axios.post<Usuario>('/login', { nombreUsuario, password })).data;
+  return { token: 'ejemplo-jwt', nombreUsuario, password };
 }
