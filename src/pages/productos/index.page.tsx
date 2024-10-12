@@ -94,7 +94,7 @@ export default function ProductosPage() {
             <Tooltip
               title={
                 <List dense={true} sx={{ p: 0 }}>
-                  {original.descuentoEfectivo && (
+                  {!!original.descuentoEfectivo && (
                     <ListItem sx={{ p: 0 }}>
                       <ListItemText
                         primary={`Efectivo: ${toArsString(
@@ -103,7 +103,7 @@ export default function ProductosPage() {
                       />
                     </ListItem>
                   )}
-                  {original.descuentoSocios && (
+                  {!!original.descuentoSocios && (
                     <ListItem sx={{ p: 0 }}>
                       <ListItemText
                         primary={`Socios: ${toArsString(
@@ -112,7 +112,7 @@ export default function ProductosPage() {
                       />
                     </ListItem>
                   )}
-                  {original.descuentoNoSocios && (
+                  {!!original.descuentoNoSocios && (
                     <ListItem sx={{ p: 0 }}>
                       <ListItemText
                         primary={`No socios: ${toArsString(
