@@ -1,5 +1,5 @@
-export const toArsString = (v: number) =>
-  v.toLocaleString('es-AR', {
+export const toArsString = (v: number | Big.Big) =>
+  ((v as Big.Big)?.toNumber ? (v as Big.Big).toNumber() : v).toLocaleString('es-AR', {
     style: 'currency',
     currency: 'ARS',
   });

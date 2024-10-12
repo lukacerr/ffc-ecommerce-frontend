@@ -1,6 +1,6 @@
 import Layout from '@/components/layout';
 import { NavPage } from '@/components/layout/constants';
-import { BarChart, Gauge, gaugeClasses, LineChart, PieChart, ScatterChart } from '@mui/x-charts';
+import { BarChart, LineChart, PieChart, ScatterChart } from '@mui/x-charts';
 import { useQuery } from '@tanstack/react-query';
 import VentasGet from '@/api/dashboard/ventas.get';
 import ComprasGet from '@/api/dashboard/compras.get';
@@ -10,9 +10,10 @@ import theme from '@/theme';
 import { toArsString } from '@/utils/toString.utils';
 import Big from 'big.js';
 import dayjs from 'dayjs';
-import { Typography } from '@mui/material';
+import { List, ListItem, ListItemText, Paper } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import DateSlider from '@/components/DateSlider';
+import { nToDayString } from '@/utils/dayjs.utils';
 
 export default function IndexPage() {
   const { isLoading, data, error } = useQuery({
@@ -39,6 +40,9 @@ export default function IndexPage() {
       ),
       totalAmountCompra: dashboard.dataReducer('compra', (pv, v) => pv.add(v.amount), Big(0)),
       totalAmountVenta: dashboard.dataReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
+      ventaAmountXweeks: dashboard.dataXweekReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
+      compraAmountXweeks: dashboard.dataXweekReducer('compra', (pv, v) => pv.add(v.amount), Big(0)),
+      ventaAmountXusers: dashboard.dataXuserReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
     }),
     [dashboard]
   );
@@ -51,119 +55,171 @@ export default function IndexPage() {
       loading={isLoading}
       error={error}
     >
-      <DateSlider value={filters} setValue={setFilters} minDate={dashboard.minDate} maxDate={dashboard.maxDate} />
-      <Typography variant="h6">Compras V.S Ventas</Typography>
-      <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
-        <Grid size={{ xs: 12, md: 8 }}>
-          <LineChart
-            grid={{ vertical: true, horizontal: true }}
-            xAxis={[
-              {
-                data: dashboard.uniqueDates,
-                valueFormatter: (date) => dayjs(date).format('DD/MM/YYYY'),
-              },
-            ]}
-            series={[
-              {
-                label: 'Compras',
-                color: theme.palette.secondary.main,
-                data: DashboardUtils.BigToNumberArray(calculations.compraAmountXdates),
-                valueFormatter: (v) => (v ? toArsString(v) : '-'),
-                area: true,
-              },
-              {
-                label: 'Ventas',
-                data: DashboardUtils.BigToNumberArray(calculations.ventaAmountXdates),
-                valueFormatter: (v) => (v ? toArsString(v) : '-'),
-                area: true,
-              },
-            ]}
-            height={300}
-          />
-        </Grid>
+      <Paper elevation={4} sx={{ px: 4, py: 2, mt: 2 }}>
+        <DateSlider value={filters} setValue={setFilters} minDate={dashboard.minDate} maxDate={dashboard.maxDate} />
+      </Paper>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <PieChart
-            colors={[theme.palette.primary.main, theme.palette.secondary.main]}
-            series={[
-              {
-                data: [
-                  { id: 'venta', label: 'Ventas', value: calculations.totalAmountVenta.toNumber() },
-                  { id: 'compra', label: 'Compras', value: calculations.totalAmountCompra.toNumber() },
-                ],
-                innerRadius: 24,
-                paddingAngle: 6,
-                cornerRadius: 6,
-                arcLabel: (item) =>
-                  `${Big(item.value)
-                    .div(calculations.totalAmountVenta.plus(calculations.totalAmountCompra))
-                    .times(100)
-                    .toFixed(2)}%`,
-                arcLabelMinAngle: 35,
-                highlightScope: { fade: 'global', highlight: 'item' },
-                faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                valueFormatter: (v) => toArsString(v.value),
-              },
-            ]}
-            height={200}
-          />
-        </Grid>
+      <Paper variant="outlined" sx={{ p: 2, m: 2 }}>
+        <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
+          <Grid size={{ xs: 12, md: 8 }}>
+            <LineChart
+              grid={{ vertical: true, horizontal: true }}
+              xAxis={[
+                {
+                  data: dashboard.uniqueDates,
+                  valueFormatter: (date) => dayjs(date).format('DD/MM/YYYY'),
+                },
+              ]}
+              series={[
+                {
+                  label: 'Compras',
+                  color: theme.palette.secondary.main,
+                  data: DashboardUtils.BigToNumberArray(calculations.compraAmountXdates),
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                  area: true,
+                },
+                {
+                  label: 'Ventas',
+                  data: DashboardUtils.BigToNumberArray(calculations.ventaAmountXdates),
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                  area: true,
+                },
+              ]}
+              height={300}
+            />
+          </Grid>
 
-        <Grid size={12}>
-          <BarChart
-            xAxis={[
-              {
-                scaleType: 'band',
-                data: dashboard.uniqueDates,
-                valueFormatter: (date) => dayjs(date).format('DD/MM/YYYY'),
-              },
-            ]}
-            series={[
-              {
-                data: DashboardUtils.BigToNumberArray(calculations.ventaAmountXdates),
-                color: theme.palette.primary.main,
-                label: 'Ventas',
-                valueFormatter: (v) => (v ? toArsString(v) : '-'),
-              },
-              {
-                data: DashboardUtils.BigToNumberArray(calculations.compraAmountXdates),
-                color: theme.palette.secondary.main,
-                label: 'Compras',
-                valueFormatter: (v) => (v ? toArsString(v) : '-'),
-              },
-              {
-                data: DashboardUtils.BigToNumberArray(calculations.diferenciaXdates),
-                color: theme.palette.success.main,
-                label: 'Diferencia',
-                valueFormatter: (v) => (v ? toArsString(v) : '-'),
-              },
-            ]}
-            grid={{ vertical: true, horizontal: true }}
-            height={400}
-          />
-        </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <PieChart
+              colors={[theme.palette.primary.main, theme.palette.secondary.main]}
+              series={[
+                {
+                  data: [
+                    { id: 'venta', label: 'Ventas', value: calculations.totalAmountVenta.toNumber() },
+                    { id: 'compra', label: 'Compras', value: calculations.totalAmountCompra.toNumber() },
+                  ],
+                  innerRadius: 24,
+                  paddingAngle: 6,
+                  cornerRadius: 6,
+                  arcLabel: (item) =>
+                    `${Big(item.value)
+                      .div(calculations.totalAmountVenta.plus(calculations.totalAmountCompra))
+                      .times(100)
+                      .toFixed(2)}%`,
+                  arcLabelMinAngle: 35,
+                  highlightScope: { fade: 'global', highlight: 'item' },
+                  faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                  valueFormatter: (v) => toArsString(v.value),
+                },
+              ]}
+              height={200}
+            />
+          </Grid>
 
-        <ScatterChart
-          width={500}
-          height={300}
-          series={[
-            {
-              data: [
-                { x: 100, y: 200, id: 1 },
-                { x: 120, y: 100, id: 2 },
-                { x: 170, y: 300, id: 3 },
-                { x: 140, y: 250, id: 4 },
-                { x: 150, y: 400, id: 5 },
-                { x: 110, y: 280, id: 6 },
-              ],
-              label: 'pv',
-              id: 'pvId',
-            },
-          ]}
-          xAxis={[{ min: 0 }]}
-        />
+          <Grid size={12}>
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: 'band',
+                  data: dashboard.uniqueDates,
+                  valueFormatter: (date) => dayjs(date).format('DD/MM/YYYY'),
+                },
+              ]}
+              series={[
+                {
+                  data: DashboardUtils.BigToNumberArray(calculations.ventaAmountXdates),
+                  color: theme.palette.primary.main,
+                  label: 'Ventas',
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                },
+                {
+                  data: DashboardUtils.BigToNumberArray(calculations.compraAmountXdates),
+                  color: theme.palette.secondary.main,
+                  label: 'Compras',
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                },
+                {
+                  data: DashboardUtils.BigToNumberArray(calculations.diferenciaXdates),
+                  color: theme.palette.success.main,
+                  label: 'Diferencia',
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                },
+              ]}
+              grid={{ vertical: true }}
+              height={400}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <List dense={true} sx={{ listStyle: 'decimal', pl: 4, height: 300, overflowBlock: 'scroll' }}>
+              {dashboard.uniqueBuyers.slice(0, 100).map((u, i) => (
+                <ListItem key={u} sx={{ display: 'list-item' }}>
+                  <ListItemText
+                    primary={u}
+                    secondary={toArsString(calculations.ventaAmountXusers[i])}
+                    secondaryTypographyProps={{ color: 'success' }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <BarChart
+              yAxis={[
+                {
+                  scaleType: 'band',
+                  data: [0, 1, 2, 3, 4, 5, 6],
+                  valueFormatter: nToDayString,
+                },
+              ]}
+              series={[
+                {
+                  data: DashboardUtils.BigToNumberArray(calculations.ventaAmountXweeks),
+                  color: theme.palette.primary.main,
+                  label: 'Ventas',
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                },
+                {
+                  data: DashboardUtils.BigToNumberArray(calculations.compraAmountXweeks),
+                  color: theme.palette.secondary.main,
+                  label: 'Compras',
+                  valueFormatter: (v) => (v ? toArsString(v) : '-'),
+                },
+              ]}
+              grid={{ horizontal: true }}
+              layout="horizontal"
+              height={300}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <ScatterChart
+              height={300}
+              series={[
+                {
+                  data: dashboard.dataOf('venta').map((v) => ({ id: v.id, x: v.quantity, y: v.amount.toNumber() })),
+                  label: 'Ventas',
+                  id: 'ventas',
+                  color: theme.palette.primary.main,
+                  valueFormatter: ({ x, y, id }) =>
+                    `(${dashboard.id(id)?.date.format('DD/MM/YYYY')}) ${x} productos por ${toArsString(y)}`,
+                },
+                {
+                  data: dashboard.dataOf('compra').map((v) => ({ id: v.id, x: v.quantity, y: v.amount.toNumber() })),
+                  label: 'Compras',
+                  id: 'compras',
+                  color: theme.palette.secondary.main,
+                  valueFormatter: ({ x, y, id }) =>
+                    `(${dashboard.id(id)?.date.format('DD/MM/YYYY')}) ${x} productos por ${toArsString(y)}`,
+                },
+              ]}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+
+      {/* 
+      <Grid size={{ xs: 12, md: 4 }}>
         <Gauge
-          width={200}
           height={200}
           value={60}
           cornerRadius="50%"
@@ -177,6 +233,7 @@ export default function IndexPage() {
           })}
         />
       </Grid>
+      */}
     </Layout>
   );
 }

@@ -29,7 +29,9 @@ export default function AvatarButton() {
         }}
         keepMounted
       >
-        <MenuItem disabled>{u.nombreUsuario}</MenuItem>
+        <MenuItem sx={{ display: 'flex', justifyContent: 'center' }} disabled>
+          {u.nombreUsuario}
+        </MenuItem>
         <Divider />
         <MenuItem onClick={() => [handleClose(), u.logout(navigate)]}>Cerrar sesión</MenuItem>
       </Menu>

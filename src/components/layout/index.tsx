@@ -7,6 +7,7 @@ import { useUsuarioStore } from '@/stores/usuario.store';
 import { useNavigate } from 'react-router';
 import MainMenu from './MainMenu';
 import Fallback from '../Fallback';
+import axios from 'axios';
 
 interface ILayoutProps {
   id: NavPage;
@@ -27,13 +28,16 @@ export default memo(function Layout({
   loading,
 }: React.PropsWithChildren<ILayoutProps>) {
   const navigate = useNavigate();
-  if (error) {
-    console.error(error);
-    navigate('/error');
-  }
 
-  const token = useUsuarioStore((state) => state.token);
-  useEffect(() => (!token ? navigate('/ingresar') : undefined), [navigate, token]);
+  useEffect(() => (error ? [console.error(error), navigate('/error')][0] : undefined), [navigate, error]);
+
+  const logout = useUsuarioStore((state) => state.logout);
+  useEffect(() => {
+    axios.interceptors.response.use(
+      (r) => r,
+      (error) => (error.response && error.response.status === 403 ? logout(navigate) : Promise.reject(error))
+    );
+  }, [logout, navigate]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
 

@@ -10,8 +10,10 @@ import useHandler from '@/hooks/useHandler.hook';
 import Producto from '@/types/producto.class';
 import { Save } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
+import { Paper } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Grid from '@mui/material/Grid2';
 
 export default function ProductoIdPage() {
   const navigate = useNavigate();
@@ -56,6 +58,12 @@ export default function ProductoIdPage() {
     >
       <DeleteProductModal handler={deleteModal} />
       <form onSubmit={submitHandler.submit}>
+        <Paper variant="outlined" sx={{ p: 2, m: 2 }}>
+          <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
+            <Grid size={{ sm: 12, md: 4 }}></Grid>
+          </Grid>
+        </Paper>
+
         <p>{JSON.stringify(value)}</p>
         {!!id && (
           <LoadingButton

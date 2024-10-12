@@ -5,13 +5,15 @@ import { NavigateFunction } from 'react-router';
 import LoginPost from '@/api/login.post';
 
 interface IUsuarioStore extends Partial<Usuario> {
-  login: (nombreUsuario: string, password: string, navigate?: NavigateFunction) => Promise<Usuario>;
+  login: (nombreUsuario: string, password: string, navigate?: NavigateFunction) => Promise<Partial<Usuario>>;
   logout: (navigate?: NavigateFunction) => void;
 }
 
+const usuarioStorage = JSON.parse(localStorage.getItem('usuario_storage') || '{}') as Partial<Usuario>;
+if (usuarioStorage.token) axios.defaults.headers.common['Authorization'] = `Bearer ${usuarioStorage.token}`;
+
 export const useUsuarioStore = create<IUsuarioStore>((set) => ({
-  token: undefined,
-  ...JSON.parse(localStorage.getItem('usuario_storage') || '{}'),
+  ...usuarioStorage,
   login: async (nombreUsuario, password, navigate) => {
     const u = await LoginPost(nombreUsuario, password);
     axios.defaults.headers.common['Authorization'] = `Bearer ${u.token}`;

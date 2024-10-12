@@ -1,4 +1,9 @@
+import Usuario from '@/types/usuario.interface';
+import axios from 'axios';
+
 export default async function LoginPost(nombreUsuario: string, password: string) {
-  // FIXME: return (await axios.post<Usuario>('/login', { nombreUsuario, password })).data;
-  return { token: 'ejemplo-jwt', nombreUsuario, password };
+  return {
+    nombreUsuario,
+    ...(await axios.post<Partial<Usuario>>('/login', { nombreUsuario, password })).data,
+  };
 }

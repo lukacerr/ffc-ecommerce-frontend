@@ -69,6 +69,25 @@ export default class DashboardUtils {
     return [...new Set(this.data.map((v) => v._numdate))];
   }
 
+  get uniqueBuyers() {
+    return [
+      ...new Set(
+        this.data
+          .filter((v) => v.type === 'venta')
+          .sort((a, b) => b.amount.minus(a.amount).toNumber())
+          .map((v) => v.username)
+      ),
+    ];
+  }
+
+  dataOf(type: 'compra' | 'venta') {
+    return this.data.filter((v) => v.type === type);
+  }
+
+  id(idv: number | string) {
+    return this.data.find((v) => v.id === Number(idv));
+  }
+
   dataXdateReducer<T>(
     type: 'compra' | 'venta' | 'full',
     fn: (previousValue: T, currentValue: Transaction, currentIndex: number, array: Transaction[]) => T,
@@ -76,6 +95,26 @@ export default class DashboardUtils {
   ) {
     return this.uniqueDates.map((d) =>
       this.data.filter((v) => v._numdate === d && (type === 'full' || v.type === type)).reduce<T>(fn, init)
+    );
+  }
+
+  dataXweekReducer<T>(
+    type: 'compra' | 'venta' | 'full',
+    fn: (previousValue: T, currentValue: Transaction, currentIndex: number, array: Transaction[]) => T,
+    init: T
+  ) {
+    return [0, 1, 2, 3, 4, 5, 6].map((d) =>
+      this.data.filter((v) => v.date.day() === d && (type === 'full' || v.type === type)).reduce<T>(fn, init)
+    );
+  }
+
+  dataXuserReducer<T>(
+    type: 'compra' | 'venta' | 'full',
+    fn: (previousValue: T, currentValue: Transaction, currentIndex: number, array: Transaction[]) => T,
+    init: T
+  ) {
+    return this.uniqueBuyers.map((u) =>
+      this.data.filter((v) => v.username === u && (type === 'full' || v.type === type)).reduce<T>(fn, init)
     );
   }
 

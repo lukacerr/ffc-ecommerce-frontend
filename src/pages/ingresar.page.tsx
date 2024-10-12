@@ -6,16 +6,16 @@ import { useUsuarioStore } from '@/stores/usuario.store';
 import logoPng from '@/assets/logo.png';
 import useHandler from '@/hooks/useHandler.hook';
 import ColorIconButton from '@/components/ColorIconButton';
-import { LockOutlined, MailOutline, Visibility, VisibilityOff } from '@mui/icons-material';
+import { LockOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function IngresarPage() {
-  const [email, setEmail] = useState('');
+  const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const login = useUsuarioStore((state) => state.login);
   const navigate = useNavigate();
-  const { submit, error, loading } = useHandler(() => login(email, password, navigate));
+  const { submit, error, loading } = useHandler(() => login(user, password, navigate));
 
   return (
     <Fade in={true}>
@@ -34,11 +34,11 @@ export default function IngresarPage() {
           <form onSubmit={submit}>
             <TextField
               required
-              label="Correo Electrónico"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Usuario"
+              type="text"
+              autoComplete="user"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
               margin="normal"
               fullWidth
               autoFocus
@@ -46,7 +46,7 @@ export default function IngresarPage() {
                 input: {
                   startAdornment: (
                     <InputAdornment position="start">
-                      <MailOutline color="success" />
+                      <PersonOutline color="success" />
                     </InputAdornment>
                   ),
                 },
@@ -84,7 +84,7 @@ export default function IngresarPage() {
           </form>
           {error && (
             <Alert sx={{ mt: 2 }} severity="error">
-              Ocurrió un error. Por favor vuelva a intentarlo.
+              Credenciales inválidas. Por favor vuelva a intentarlo.
             </Alert>
           )}
         </Paper>
