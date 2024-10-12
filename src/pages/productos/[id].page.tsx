@@ -28,6 +28,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import FormValidation, { Validation } from '@/utils/form-validation.utils';
 import Big from 'big.js';
+import ProviderSelector from '@/components/ProviderSelector';
 
 export default function ProductoIdPage() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function ProductoIdPage() {
   const onChangeRaw = (id: keyof Producto, value: unknown, validation?: Validation) =>
     (!validation || FormValidation(validation)(value)) && setValue((pv) => ({ ...pv, [id]: value }));
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, validation?: Validation) =>
+  const onChange = (e: { target: { id: string; value: unknown } }, validation?: Validation) =>
     onChangeRaw(e.target.id as keyof Producto, e.target.value, validation);
 
   const getHandler = useHandler(async () => ProductoGet(id).then((v) => setValue(v)));
@@ -94,15 +95,7 @@ export default function ProductoIdPage() {
               <TextField onChange={onChange} label="Nombre" id="nombre" value={value.nombre} required fullWidth />
             </Grid>
             <Grid size={{ sm: 12, md: 6 }}>
-              {/* FIXME: idProveedor: number; */}
-              <TextField
-                onChange={onChange}
-                label="Proveedor"
-                id="idProveedor"
-                value={value.idProveedor}
-                required
-                fullWidth
-              />
+              <ProviderSelector required onChange={onChange} id="idProveedor" value={value.idProveedor} />
             </Grid>
             <Grid size={{ sm: 12, md: 12 }}>
               <TextField
