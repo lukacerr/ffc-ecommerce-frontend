@@ -8,15 +8,5 @@
     {
       "ContainerPort": "80"
     }
-  ],
-  "Environment": [
-    {
-      "Name": "VITE_PORT",
-      "Value": "80"
-    },
-    {
-      "Name": "VITE_API_URL",
-      "Value": "http://ecom-back-loadbalancer-2091081332.us-east-1.elb.amazonaws.com"
-    }
   ]
 }
