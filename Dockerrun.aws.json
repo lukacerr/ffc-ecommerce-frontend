@@ -1,17 +1,22 @@
 {
-  "AWSEBDockerrunVersion": 2,
-  "containerDefinitions": [
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "ghcr.io/lukacerr/ffc-ecommerce-main:latest",
+    "Update": "true"
+  },
+  "Ports": [
     {
-      "name": "web",
-      "image": "ghcr.io/lukacerr/ffc-ecommerce-main:latest",
-      "memory": 128,
-      "essential": true,
-      "portMappings": [
-        {
-          "hostPort": 80,
-          "containerPort": 80
-        }
-      ]
+      "ContainerPort": "80"
+    }
+  ],
+  "Environment": [
+    {
+      "Name": "VITE_PORT",
+      "Value": "80"
+    },
+    {
+      "Name": "VITE_API_URL",
+      "Value": "http://ecom-back-loadbalancer-2091081332.us-east-1.elb.amazonaws.com"
     }
   ]
 }
