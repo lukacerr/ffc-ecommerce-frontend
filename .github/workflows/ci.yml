@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Log in
-        run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login ghcr.io -u lukacerr --password-stdin
+      - name: Sign-in
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GITHUB_TOKEN }} --password-stdin
 
       - name: Build
-        run: docker build . -t ghcr.io/lukacerr/ffc-ecommerce-main:latest
+        run: docker build . -t ghcr.io/${{ secrets.GITHUB_TOKEN }}/ffc-ecommerce-main:latest
 
       - name: Push
-        run: docker push ghcr.io/lukacerr/ffc-ecommerce-main:latest
+        run: docker push ghcr.io/${{ secrets.GITHUB_TOKEN }}/ffc-ecommerce-main:latest
