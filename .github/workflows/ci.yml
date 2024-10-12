@@ -1,0 +1,23 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u lukacerr --password-stdin
+
+      - name: Build
+        run: docker build . -t ghcr.io/lukacerr/ffc-ecommerce-main:latest
+
+      - name: Push
+        run: docker push ghcr.io/lukacerr/ffc-ecommerce-main:latest
