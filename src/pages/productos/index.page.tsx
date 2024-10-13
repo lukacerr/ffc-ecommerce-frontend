@@ -31,7 +31,9 @@ export default function ProductosPage() {
     queryFn: ProductosGet,
   });
 
-  const deleteModal = useConfirmModal<Producto>(async (p) => ProductoDelete(p.idProducto).then(() => refetch()));
+  const deleteModal = useConfirmModal<Partial<Producto>>(async (p) =>
+    ProductoDelete(p?.idProducto || 0).then(() => refetch())
+  );
 
   const { length, alerts } = useMemo(
     () => ({ length: data?.length, alerts: data?.reduce((v, p) => v + (p.hasLowStock ? 1 : 0), 0) }),

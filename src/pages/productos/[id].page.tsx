@@ -238,10 +238,10 @@ export default function ProductoIdPage() {
             <Grid size={{ sm: 12 }}>
               <TextField
                 variant="standard"
-                onChange={(e) => onChangeRaw('caracteristicas', e.target.value.split(','))}
+                onChange={(e) => onChangeRaw('caracteristicas', e.target.value.split(', '))}
                 label="Características (separar por coma)"
                 id="caracteristicas"
-                value={value.caracteristicas?.join(',')}
+                value={value.caracteristicas?.join(', ')}
                 fullWidth
                 multiline
               />
