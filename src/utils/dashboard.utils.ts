@@ -70,14 +70,7 @@ export default class DashboardUtils {
   }
 
   get uniqueBuyers() {
-    return [
-      ...new Set(
-        this.data
-          .filter((v) => v.type === 'venta')
-          .sort((a, b) => b.amount.minus(a.amount).toNumber())
-          .map((v) => v.username)
-      ),
-    ];
+    return [...new Set(this.data.filter((v) => v.type === 'venta').map((v) => v.username))];
   }
 
   dataOf(type: 'compra' | 'venta') {
@@ -111,11 +104,12 @@ export default class DashboardUtils {
   dataXuserReducer<T>(
     type: 'compra' | 'venta' | 'full',
     fn: (previousValue: T, currentValue: Transaction, currentIndex: number, array: Transaction[]) => T,
-    init: T
+    init: T,
+    sort?: (a: T, b: T) => number
   ) {
-    return this.uniqueBuyers.map((u) =>
-      this.data.filter((v) => v.username === u && (type === 'full' || v.type === type)).reduce<T>(fn, init)
-    );
+    return this.uniqueBuyers
+      .map((u) => this.data.filter((v) => v.username === u && (type === 'full' || v.type === type)).reduce<T>(fn, init))
+      .sort(sort);
   }
 
   dataReducer<T>(

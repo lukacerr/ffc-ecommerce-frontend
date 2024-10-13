@@ -42,7 +42,12 @@ export default function IndexPage() {
       totalAmountVenta: dashboard.dataReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
       ventaAmountXweeks: dashboard.dataXweekReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
       compraAmountXweeks: dashboard.dataXweekReducer('compra', (pv, v) => pv.add(v.amount), Big(0)),
-      ventaAmountXusers: dashboard.dataXuserReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
+      ventaAmountXusers: dashboard.dataXuserReducer(
+        'venta',
+        (pv, v) => pv.add(v.amount),
+        Big(0),
+        (a, b) => b.minus(a).toNumber()
+      ),
     }),
     [dashboard]
   );
