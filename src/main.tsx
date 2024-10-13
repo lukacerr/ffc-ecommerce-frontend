@@ -26,7 +26,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 axios.defaults.baseURL =
   import.meta.env.VITE_API_URL || 'http://ecom-back-loadbalancer-2091081332.us-east-1.elb.amazonaws.com';
 
-console.log('LOG TESTING', axios.defaults.baseURL, import.meta.env.VITE_API_URL, process?.env?.VITE_API_URL);
+console.log('LOG TESTING', axios.defaults.baseURL, import.meta.env.VITE_API_URL);
 
 const queryClient = new QueryClient();
 
