@@ -8,10 +8,9 @@ import { IUseConfirmModal } from '@/hooks/useConfirmModal.hook';
 
 export interface IProvierModal extends Partial<ModalProps> {
   handler: IUseConfirmModal<Partial<Proveedor>>;
-  base?: Proveedor | null;
 }
 
-export default function ProviderModal({ handler, base, ...props }: IProvierModal) {
+export default function ProviderModal({ handler, ...props }: IProvierModal) {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     validation: Validation = Validation.NONE
@@ -22,7 +21,7 @@ export default function ProviderModal({ handler, base, ...props }: IProvierModal
   return (
     <BaseModal {...props} open={handler.open}>
       <>
-        <Typography variant="h6">{base?.idProveedor ? 'Editar' : 'Crear'} proveedor</Typography>
+        <Typography variant="h6">{handler.metadata?.idProveedor ? 'Editar' : 'Crear'} proveedor</Typography>
         <Grid p={2} container spacing={2} width={'100%'} display="flex" justifyContent="center" alignItems="center">
           <Grid size={{ sm: 12, md: 6 }}>
             <TextField

@@ -45,7 +45,7 @@ export default function ProviderSelector(props: IProviderSelectorProps) {
   return (
     <Box display={'flex'} gap={2}>
       <DeleteProviderModal handler={deleteModal} />
-      <ProviderModal handler={couModal} base={provider} />
+      <ProviderModal handler={couModal} />
       <Autocomplete
         options={data || []}
         value={provider}
