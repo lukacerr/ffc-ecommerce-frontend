@@ -85,6 +85,7 @@ export default function IndexPage() {
                 },
                 {
                   label: 'Ventas',
+                  color: theme.palette.primary.main,
                   data: DashboardUtils.BigToNumberArray(calculations.ventaAmountXdates),
                   valueFormatter: (v) => (v ? toArsString(v) : '-'),
                   area: true,
