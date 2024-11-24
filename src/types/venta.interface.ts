@@ -1,3 +1,10 @@
+export enum EstadoVenta {
+  PAGADO = "PAGADO",
+  EN_PROCESO = "EN_PROCESO",
+  ENVIADO = "ENVIADO",
+  RECIBIDO = "RECIBIDO",
+}
+
 export default interface Venta {
   idVenta: number;
   nombreUsuario: string;
@@ -5,4 +12,5 @@ export default interface Venta {
   montoTotal: number;
   cantidadDeProductos: number;
   productos: number[];
+  estado: EstadoVenta;
 }

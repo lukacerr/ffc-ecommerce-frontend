@@ -1,5 +1,5 @@
 import Compra from '@/types/compra.interface';
-import Venta from '@/types/venta.interface';
+import Venta, { EstadoVenta } from '@/types/venta.interface';
 import Big from 'big.js';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -15,6 +15,7 @@ export interface Transaction {
   amount: Big;
   quantity: number;
   ids?: number[];
+  status: EstadoVenta | null;
 }
 
 export default class DashboardUtils {
@@ -38,6 +39,7 @@ export default class DashboardUtils {
         amount: Big(v.montoTotal),
         quantity: v.cantidadDeUnidades,
         ids: [v.idProducto],
+        status: null,
       })) ?? []),
       ...(ventas?.map((v) => ({
         type: 'venta' as const,
@@ -48,6 +50,7 @@ export default class DashboardUtils {
         amount: Big(v.montoTotal),
         quantity: v.cantidadDeProductos,
         ids: v.productos,
+        status: v.estado,
       })) ?? [])
     );
 

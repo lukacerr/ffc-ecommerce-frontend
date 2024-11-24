@@ -1,19 +1,19 @@
+import ComprasGet from '@/api/dashboard/compras.get';
+import VentasGet from '@/api/dashboard/ventas.get';
+import DateSlider from '@/components/DateSlider';
 import Layout from '@/components/layout';
 import { NavPage } from '@/components/layout/constants';
-import { BarChart, LineChart, PieChart, ScatterChart } from '@mui/x-charts';
-import { useQuery } from '@tanstack/react-query';
-import VentasGet from '@/api/dashboard/ventas.get';
-import ComprasGet from '@/api/dashboard/compras.get';
-import DashboardUtils from '@/utils/dashboard.utils';
-import { useMemo, useState } from 'react';
 import theme from '@/theme';
+import DashboardUtils from '@/utils/dashboard.utils';
+import { nToDayString } from '@/utils/dayjs.utils';
 import { toArsString } from '@/utils/toString.utils';
-import Big from 'big.js';
-import dayjs from 'dayjs';
 import { List, ListItem, ListItemText, Paper } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import DateSlider from '@/components/DateSlider';
-import { nToDayString } from '@/utils/dayjs.utils';
+import { BarChart, LineChart, PieChart, ScatterChart } from '@mui/x-charts';
+import { useQuery } from '@tanstack/react-query';
+import Big from 'big.js';
+import dayjs from 'dayjs';
+import { useState, useMemo } from 'react';
 
 export default function IndexPage() {
   const { isLoading, data, error } = useQuery({
@@ -29,8 +29,9 @@ export default function IndexPage() {
     [data, filters]
   );
 
-  const calculations = useMemo(
+  const { raw, ...calculations } = useMemo(
     () => ({
+      raw: dashboard.data,
       compraAmountXdates: dashboard.dataXdateReducer('compra', (pv, v) => pv.add(v.amount), Big(0)),
       ventaAmountXdates: dashboard.dataXdateReducer('venta', (pv, v) => pv.add(v.amount), Big(0)),
       diferenciaXdates: dashboard.dataXdateReducer(
@@ -220,26 +221,14 @@ export default function IndexPage() {
               ]}
             />
           </Grid>
+          {/* 
+            TODO: Historial compras/ventas
+              - LAS TRANSACTIONS ESTÁN EN LA VARIABLE raw: Transaction[]
+              - Listar historial de compras y ventas, con todos los datos
+              - Desde el listado, poder cambiar el estado de las ventas
+          */}
         </Grid>
       </Paper>
-
-      {/* 
-      <Grid size={{ xs: 12, md: 4 }}>
-        <Gauge
-          height={200}
-          value={60}
-          cornerRadius="50%"
-          sx={(theme) => ({
-            [`& .${gaugeClasses.valueText}`]: {
-              fontSize: 40,
-            },
-            [`& .${gaugeClasses.valueArc}`]: {
-              fill: theme.palette.success.main,
-            },
-          })}
-        />
-      </Grid>
-      */}
     </Layout>
   );
 }
