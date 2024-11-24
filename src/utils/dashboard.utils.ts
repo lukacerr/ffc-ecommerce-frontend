@@ -14,7 +14,7 @@ export interface Transaction {
   _numdate: number;
   amount: Big;
   quantity: number;
-  ids?: number[];
+  ids: number[];
   status: EstadoVenta | null;
 }
 

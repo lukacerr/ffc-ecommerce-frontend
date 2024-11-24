@@ -3,6 +3,7 @@ import VentasGet from '@/api/dashboard/ventas.get';
 import DateSlider from '@/components/DateSlider';
 import Layout from '@/components/layout';
 import { NavPage } from '@/components/layout/constants';
+import TransactionTable from '@/components/TransactionTable';
 import theme from '@/theme';
 import DashboardUtils from '@/utils/dashboard.utils';
 import { nToDayString } from '@/utils/dayjs.utils';
@@ -13,10 +14,10 @@ import { BarChart, LineChart, PieChart, ScatterChart } from '@mui/x-charts';
 import { useQuery } from '@tanstack/react-query';
 import Big from 'big.js';
 import dayjs from 'dayjs';
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 export default function IndexPage() {
-  const { isLoading, data, error } = useQuery({
+  const { isLoading, data, error, refetch } = useQuery({
     queryKey: [VentasGet.name, ComprasGet.name],
     queryFn: () => Promise.all([VentasGet(), ComprasGet()]),
   });
@@ -221,12 +222,7 @@ export default function IndexPage() {
               ]}
             />
           </Grid>
-          {/* 
-            TODO: Historial compras/ventas
-              - LAS TRANSACTIONS ESTÁN EN LA VARIABLE raw: Transaction[]
-              - Listar historial de compras y ventas, con todos los datos
-              - Desde el listado, poder cambiar el estado de las ventas
-          */}
+          <TransactionTable data={raw} refetch={refetch} />
         </Grid>
       </Paper>
     </Layout>
