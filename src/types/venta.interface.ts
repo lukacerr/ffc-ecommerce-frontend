@@ -1,15 +1,15 @@
 export enum EstadoVenta {
   PAGADO = 'PAGADO',
-  EN_PROCESO = 'EN_PROCESO',
   ENVIADO = 'ENVIADO',
-  RECIBIDO = 'RECIBIDO',
+  ENTREGADO = 'ENTREGADO',
+  ERROR_DE_STOCK = 'ERROR_DE_STOCK',
 }
 
 export const allStatuses = {
-  [EstadoVenta.PAGADO]: { value: 'Pagado', color: 'info', successor: EstadoVenta.EN_PROCESO },
-  [EstadoVenta.EN_PROCESO]: { value: 'En proceso', color: 'default', successor: EstadoVenta.ENVIADO },
-  [EstadoVenta.ENVIADO]: { value: 'Enviado', color: 'warning', successor: EstadoVenta.RECIBIDO },
-  [EstadoVenta.RECIBIDO]: { value: 'Recibido', color: 'success', successor: EstadoVenta.PAGADO },
+  [EstadoVenta.PAGADO]: { value: 'Pagado', color: 'warning', successor: EstadoVenta.ENVIADO },
+  [EstadoVenta.ENVIADO]: { value: 'Enviado', color: 'info', successor: EstadoVenta.ENTREGADO },
+  [EstadoVenta.ENTREGADO]: { value: 'Entregado', color: 'success', successor: EstadoVenta.ERROR_DE_STOCK },
+  [EstadoVenta.ERROR_DE_STOCK]: { value: 'Error de stock', color: 'error', successor: EstadoVenta.PAGADO },
 };
 
 export default interface Venta {
