@@ -57,7 +57,7 @@ export default class DashboardUtils {
     const sorted = this.data.sort((a, b) => a._numdate - b._numdate);
     this.minDate = sorted[0]?.date || this.from;
     this.maxDate = sorted[sorted.length - 1]?.date || this.to;
-    this.data = sorted.filter((v) => v.date.isBetween(this.from, this.to));
+    this.data = sorted.filter((v) => v.date.isBetween(this.from, this.to, 'dates', '[]'));
   }
 
   static BigToNumberArray(arr: Big[]) {
